@@ -5,12 +5,12 @@
 
 class PurePursuit {
 private:
-    ros::NodeHandle n;
+    ros::NodeHandle nh;
     // TODO: create ROS subscribers and publishers
 
 public:
-    Safety() {
-        n = ros::NodeHandle();
+    PurePursuit() : nh() {
+        
 
         // TODO: create ROS subscribers and publishers
         
