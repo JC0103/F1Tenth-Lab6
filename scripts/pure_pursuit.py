@@ -24,7 +24,6 @@ class PurePursuit(object):
 		self.marker_pub = rospy.Publisher('/mark', Marker, queue_size = 1)
 		self.waypoints = np.genfromtxt(package+'/logs/wp-2021-10-13-11-18-23.csv', delimiter=',')[:, :2]
 		self.l = 1
-		self.n = 100
 		self.listener = tf.TransformListener()
 
 	def pose_callback(self, data):
