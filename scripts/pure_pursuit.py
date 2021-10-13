@@ -10,7 +10,6 @@ import numpy as np
 import tf
 from ackermann_msgs.msg import AckermannDriveStamped
 from tf import transformations
-# TODO: import ROS msg types and libraries
 
 rospack = rospkg.RosPack()
 package = rospack.get_path('pure_pursuit')
@@ -28,20 +27,14 @@ class PurePursuit(object):
 		self.n = 100
 		self.listener = tf.TransformListener()
 
-		print(self.waypoints.shape)
 	def pose_callback(self, data):
-		# TODO: find the current waypoint to track using methods mentioned in lecture
-		# xy = np.array([data.pose.pose.position.x, data.pose.pose.position.y])
-
 		
 		(trans,rot) = self.listener.lookupTransform('/base_link', '/map', data.header.stamp)
 		rot = tf.transformations.quaternion_matrix(rot)[:3, :3]
-		# print(rot)
 		matrix = np.zeros((4,4)) #4x4
 		matrix[:3,:3] = rot
 		matrix[:3, 3] = trans
 		matrix[-1, -1] = 1 
-		#self.waypoint
 		n = len(self.waypoints)
 		ipt = np.zeros((4, n))
 		ipt[:2, :] = self.waypoints.T
@@ -49,10 +42,7 @@ class PurePursuit(object):
 
 		opt = matrix.dot(ipt)
 		xy = opt[:2, :].T #transformed
-		# print(np.min(np.sum(xy**2, axis=1)))
 		xy[xy[:,0]<0] = 10 #filter behind car
-
-		# print(np.min(xy[:, 0]))
 
 		distance = np.sum(xy**2, axis=1)
 		idx = np.argmin(np.absolute(distance-self.l**2))
@@ -103,18 +93,6 @@ class PurePursuit(object):
 		marker.lifetime.secs = 0
 		marker.frame_locked = True
 		self.marker_pub.publish(marker)
-
-	
-		
-		
-		      
-				
-	# TODO: transform goal point to vehicle frame of reference
-
-	# TODO: calculate curvature/steering angle
-
-	# TODO: publish drive message, don't forget to limit the steering angle between -0.4189 and 0.4189 radians
-
 
 def main():
 	rospy.init_node('pure_pursuit_node')
