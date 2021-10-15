@@ -27,7 +27,6 @@ class PurePursuit(object):
 
 		self.l = 0.5
 		self.waypoints = file.copy()
-		self.listener = tf.TransformListener()
 
 	def pose_callback(self, data):
 		#plot waypoints into line
