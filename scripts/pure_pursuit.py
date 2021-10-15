@@ -8,27 +8,31 @@ from nav_msgs.msg import Odometry
 from visualization_msgs.msg import Marker
 from ackermann_msgs.msg import AckermannDriveStamped
 
-from visualizer import plot_marker
-
+from visualizer import plot_marker, plot_track
 
 rospack = rospkg.RosPack()
 package_path = rospack.get_path('F1Tenth-Lab6')
+file = np.genfromtxt(package_path+'/logs/waypoints.csv', delimiter=',')[:, :2]
 
 class PurePursuit(object):
 	"""
 	The class that handles pure pursuit.
 	"""
 	def __init__(self):
-		#subs & pubs
+		#subs & pubs		
 		self.odom_sub = rospy.Subscriber('/odom', Odometry, self.pose_callback, queue_size = 1)
 		self.drive_pub = rospy.Publisher('/nav', AckermannDriveStamped, queue_size = 1)
 		self.marker_pub = rospy.Publisher('/goal_point', Marker, queue_size = 1)
+		self.track_pub = rospy.Publisher('/track', Marker, queue_size = 1)
 
 		self.l = 0.5
-		self.waypoints = np.genfromtxt(package_path+'/logs/waypoints.csv', delimiter=',')[:, :2]
+		self.waypoints = file.copy()
 		self.listener = tf.TransformListener()
 
 	def pose_callback(self, data):
+		#plot waypoints into line
+#		plot_track(self.track_pub, self.waypoints.copy())
+		
 		#get pose of car
 		orient = data.pose.pose.orientation 
 		pos = data.pose.pose.position
