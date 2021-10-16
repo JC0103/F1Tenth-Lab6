@@ -12,7 +12,7 @@ from visualizer import plot_marker, plot_track
 
 rospack = rospkg.RosPack()
 package_path = rospack.get_path('F1Tenth-Lab6')
-file = np.genfromtxt(package_path+'/logs/waypoints.csv', delimiter=',')[:, :2]
+file = np.genfromtxt(package_path+'/logs/waypoints2.csv', delimiter=',')[:, :2]
 
 class PurePursuit(object):
 	"""
@@ -25,7 +25,7 @@ class PurePursuit(object):
 		self.marker_pub = rospy.Publisher('/goal_point', Marker, queue_size = 1)
 		self.track_pub = rospy.Publisher('/track', Marker, queue_size = 1)
 
-		self.l = 0.5
+		self.l = 1.0
 		self.waypoints = file.copy()
 
 	def pose_callback(self, data):
@@ -68,11 +68,11 @@ class PurePursuit(object):
 	
 	def steer(self, angle): 	
 		if -np.pi/18 < angle < np.pi/18:
-			velocity = 3
+			velocity = 2.5
 		elif -np.pi/9 < angle <= -np.pi/18 or np.pi/18 <= angle < np.pi/9:
-			velocity = 2
+			velocity = 2.5
 		else:
-			velocity = 1
+			velocity = 2.5
 			
 		drive_msg = AckermannDriveStamped()
 		drive_msg.header.stamp = rospy.Time.now()
